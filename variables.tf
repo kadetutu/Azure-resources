@@ -4,12 +4,12 @@ variable "resource_group_location" {
 }
 
 variable "resource_group_name" {
-  default     = "rg_sb_eastus_231697_1_172720426184"
+  default     = "rg_sb_eastus_231697_1_172735813736"
   description = "Name of the resource group."
 }
 
 variable "prefix" {
   type        = string
-  default     = "win-"
+  default     = "win"
   description = "Prefix of the vm resource name"
 }
