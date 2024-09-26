@@ -95,7 +95,7 @@ resource "azurerm_windows_virtual_machine" "main" {
   location              = var.resource_group_location
   resource_group_name   = var.resource_group_name
   network_interface_ids = [azurerm_network_interface.my_terraform_nic.id]
-  size                  = "B2s"
+  size                  = "Standard_B2s"
 
   os_disk {
     name                 = "myOsDisk"
