@@ -4,7 +4,7 @@ variable "resource_group_location" {
 }
 
 variable "resource_group_name" {
-  default     = "rg_sb_eastus_231697_1_172735813736"
+  default     = "rg_sb_westeurope_231697_2_172735813859"
   description = "Name of the resource group."
 }
 
