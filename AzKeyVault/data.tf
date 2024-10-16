@@ -13,5 +13,6 @@ data "azurerm_key_vault_secret" "test" {
 
 output "secret_value" {
   value = "${data.azurerm_key_vault_secret.test.value}"
+  sensitive = true
 }
 
