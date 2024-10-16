@@ -37,6 +37,12 @@ variable "secret_permissions" {
   default     = ["Set"]
 }
 
+variable "key_permissions" {
+  type        = list(string)
+  description = "List of secret permissions."
+  default     = ["List", "Create", "Delete", "Get", "Purge", "Recover", "Update", "GetRotationPolicy", "SetRotationPolicy"]
+}
+
 variable "key_type" {
   description = "The JsonWebKeyType of the key to be created."
   default     = "RSA"
