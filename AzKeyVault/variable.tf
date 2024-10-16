@@ -11,11 +11,13 @@ variable "resource_group_location" {
 variable "vault_prefix" {
     type = string
     description = "prefix for Azure Key Vault name"
+    default = "azurevt"
 }
 
-variable "key_prefix" {
-    type = string
+variable "secret_prefix" {
+    type = list(string)
     description = "prefix for Azure vault key name"
+    
 }
 
 variable "env" {
@@ -26,12 +28,19 @@ variable "env" {
 
 variable "kv_sku" {
   type = string
+  default = "standard"
 }
 
 variable "secret_permissions" {
   type        = list(string)
   description = "List of secret permissions."
-  default     = ["Set"]
+  default     = ["Set","Get","List","Delete"]
+}
+
+variable "key_permissions" {
+  type        = list(string)
+  description = "List of secret permissions."
+  default     = ["List", "Create", "Delete", "Get", "Purge", "Recover", "Update", "GetRotationPolicy", "SetRotationPolicy"]
 }
 
 variable "key_type" {

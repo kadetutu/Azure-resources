@@ -21,7 +21,8 @@ resource "azurerm_subnet" "my_terraform_subnet" {
 
 # Create public IPs
 resource "azurerm_public_ip" "my_terraform_public_ip" {
-  name                = "${random_pet.prefix.id}-public-ip"
+  count               = 2
+  name                = "${random_pet.prefix.id}-public-ip-${count.index+1}"
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
   allocation_method   = "Dynamic"
@@ -59,7 +60,8 @@ resource "azurerm_network_security_group" "my_terraform_nsg" {
 
 # Create network interface
 resource "azurerm_network_interface" "my_terraform_nic" {
-  name                = "${random_pet.prefix.id}-nic"
+  count = 2
+  name                = "${random_pet.prefix.id}-nic-${count.index+1}"
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
 
@@ -67,13 +69,14 @@ resource "azurerm_network_interface" "my_terraform_nic" {
     name                          = "my_nic_configuration"
     subnet_id                     = azurerm_subnet.my_terraform_subnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.my_terraform_public_ip.id
+    public_ip_address_id          = azurerm_public_ip.my_terraform_public_ip[count.index].id
   }
 }
 
 # Connect the security group to the network interface
 resource "azurerm_network_interface_security_group_association" "example" {
-  network_interface_id      = azurerm_network_interface.my_terraform_nic.id
+  count = 2
+  network_interface_id      = azurerm_network_interface.my_terraform_nic[count.index].id
   network_security_group_id = azurerm_network_security_group.my_terraform_nsg.id
 }
 
@@ -89,16 +92,17 @@ resource "azurerm_storage_account" "my_storage_account" {
 
 # Create virtual machine
 resource "azurerm_windows_virtual_machine" "main" {
-  name                  = "${var.prefix}-vm"
+  count = 2
+  name                  = "${var.prefix}-vm-${count.index+1}"
   admin_username        = "azureuser"
-  admin_password        = random_password.password.result
+  admin_password        = "${data.azurerm_key_vault_secret.test.value}"
   location              = var.resource_group_location
   resource_group_name   = var.resource_group_name
-  network_interface_ids = [azurerm_network_interface.my_terraform_nic.id]
+  network_interface_ids = [azurerm_network_interface.my_terraform_nic[count.index].id]
   size                  = "Standard_B2s"
 
   os_disk {
-    name                 = "myOsDisk"
+    name                 = "myOsDisk-${count.index+1}"
     caching              = "ReadWrite"
     storage_account_type = "StandardSSD_LRS"
   }
@@ -118,8 +122,9 @@ resource "azurerm_windows_virtual_machine" "main" {
 
 # Install IIS web server to the virtual machine
 resource "azurerm_virtual_machine_extension" "web_server_install" {
+  count = 2
   name                       = "${random_pet.prefix.id}-wsi"
-  virtual_machine_id         = azurerm_windows_virtual_machine.main.id
+  virtual_machine_id         = azurerm_windows_virtual_machine.main[count.index].id
   publisher                  = "Microsoft.Compute"
   type                       = "CustomScriptExtension"
   type_handler_version       = "1.8"
