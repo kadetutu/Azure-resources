@@ -75,7 +75,8 @@ resource "azurerm_network_interface" "my_terraform_nic" {
 
 # Connect the security group to the network interface
 resource "azurerm_network_interface_security_group_association" "example" {
-  network_interface_id      = azurerm_network_interface.my_terraform_nic[count.index+1]
+  count = 2
+  network_interface_id      = azurerm_network_interface.my_terraform_nic[count.index+1].id
   network_security_group_id = azurerm_network_security_group.my_terraform_nsg.id
 }
 
@@ -121,8 +122,9 @@ resource "azurerm_windows_virtual_machine" "main" {
 
 # Install IIS web server to the virtual machine
 resource "azurerm_virtual_machine_extension" "web_server_install" {
+  count = 2
   name                       = "${random_pet.prefix.id}-wsi"
-  virtual_machine_id         = azurerm_windows_virtual_machine.main.id
+  virtual_machine_id         = azurerm_windows_virtual_machine.main[count.index].id
   publisher                  = "Microsoft.Compute"
   type                       = "CustomScriptExtension"
   type_handler_version       = "1.8"
