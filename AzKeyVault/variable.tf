@@ -34,7 +34,7 @@ variable "kv_sku" {
 variable "secret_permissions" {
   type        = list(string)
   description = "List of secret permissions."
-  default     = ["Set"]
+  default     = ["Get","List","Set","Restore"]
 }
 
 variable "key_type" {
