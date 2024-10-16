@@ -21,7 +21,8 @@ resource "azurerm_subnet" "my_terraform_subnet" {
 
 # Create public IPs
 resource "azurerm_public_ip" "my_terraform_public_ip" {
-  name                = "${random_pet.prefix.id}-public-ip"
+  count               = 2
+  name                = "${random_pet.prefix.id}-public-ip-${count.index+1}"
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
   allocation_method   = "Dynamic"
@@ -59,7 +60,8 @@ resource "azurerm_network_security_group" "my_terraform_nsg" {
 
 # Create network interface
 resource "azurerm_network_interface" "my_terraform_nic" {
-  name                = "${random_pet.prefix.id}-nic"
+  count = 2
+  name                = "${random_pet.prefix.id}-nic-${count.index+1}"
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
 
@@ -67,13 +69,13 @@ resource "azurerm_network_interface" "my_terraform_nic" {
     name                          = "my_nic_configuration"
     subnet_id                     = azurerm_subnet.my_terraform_subnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.my_terraform_public_ip.id
+    public_ip_address_id          = azurerm_public_ip.my_terraform_public_ip[count.index+1].id
   }
 }
 
 # Connect the security group to the network interface
 resource "azurerm_network_interface_security_group_association" "example" {
-  network_interface_id      = azurerm_network_interface.my_terraform_nic.id
+  network_interface_id      = azurerm_network_interface.my_terraform_nic[count.index+1]
   network_security_group_id = azurerm_network_security_group.my_terraform_nsg.id
 }
 
@@ -89,12 +91,13 @@ resource "azurerm_storage_account" "my_storage_account" {
 
 # Create virtual machine
 resource "azurerm_windows_virtual_machine" "main" {
-  name                  = "${var.prefix}-vm"
+  count = 2
+  name                  = "${var.prefix}-vm-${count.index+1}"
   admin_username        = "azureuser"
-  admin_password        = random_password.password.result
+  admin_password        = "${data.azurerm_key_vault_secret.test.value}"
   location              = var.resource_group_location
   resource_group_name   = var.resource_group_name
-  network_interface_ids = [azurerm_network_interface.my_terraform_nic.id]
+  network_interface_ids = [azurerm_network_interface.my_terraform_nic[count.index+1].id]
   size                  = "Standard_B2s"
 
   os_disk {

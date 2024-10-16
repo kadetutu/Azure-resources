@@ -21,3 +21,21 @@ resource "random_pet" "prefix" {
   prefix = var.prefix
   length = 1
 }
+
+data "azurerm_key_vault" "example" {
+  name                = var.azure_vault_name
+  resource_group_name = var.resource_group_name
+}
+
+data "azurerm_key_vault_secret" "test" {
+  name         = var.azure_secret_name
+  key_vault_id = data.azurerm_key_vault.example.id
+
+  # vault_uri is deprecated in latest azurerm, use key_vault_id instead.
+  # vault_uri = "https://mykeyvault.vault.azure.net/"
+}
+
+output "secret_value" {
+  value = "${data.azurerm_key_vault_secret.test.value}"
+  sensitive = true
+}
