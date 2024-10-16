@@ -1,3 +1,4 @@
+/*
 data "azurerm_key_vault" "example" {
   name                = "mytestvault146"
   resource_group_name = var.resource_group_name
@@ -14,3 +15,5 @@ data "azurerm_key_vault_secret" "test" {
 output "secret_value" {
   value = "${data.azurerm_key_vault_secret.test.value}"
 }
+
+*/
