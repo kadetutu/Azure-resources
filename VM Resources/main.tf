@@ -102,7 +102,7 @@ resource "azurerm_windows_virtual_machine" "main" {
   size                  = "Standard_B2s"
 
   os_disk {
-    name                 = "myOsDisk"
+    name                 = "myOsDisk-${count.index+1}"
     caching              = "ReadWrite"
     storage_account_type = "StandardSSD_LRS"
   }
