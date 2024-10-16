@@ -1,3 +1,4 @@
+/*
 data "azurerm_key_vault" "example" {
   name                = "azurevt-f0d3b5ba"
   resource_group_name = var.resource_group_name
@@ -15,4 +16,4 @@ output "secret_value" {
   value = "${data.azurerm_key_vault_secret.test.value}"
   sensitive = true
 }
-
+*/
