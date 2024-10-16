@@ -27,10 +27,10 @@ resource "azurerm_key_vault" "az_kv" {
   location = var.resource_group_location
   tenant_id = data.azurerm_client_config.current.tenant_id
   sku_name = var.kv_sku
-  access_policy = {
+  access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = data.azurerm_client_config.current.object_id
-    secret_permissions = [var.secret_permissions]
+    secret_permissions = var.secret_permissions
 
   }
 }
