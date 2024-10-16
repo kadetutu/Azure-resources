@@ -32,12 +32,12 @@ resource "azurerm_key_vault" "az_kv" {
     object_id = data.azurerm_client_config.current.object_id
     secret_permissions = var.secret_permissions
     key_permissions = var.key_permissions
-
   }
 }
 
 resource "azurerm_key_vault_secret" "vm_secret" {
-  name = "${var.key_prefix}-${random_string.azure_kv_key_name.result}"
+  name = "${each.value}-${random_string.azure_kv_key_name.result}"
   key_vault_id = azurerm_key_vault.az_kv.id
   value = random_password.azure_kv_secret.result
+  for_each = toset(var.secret_prefix)
 }

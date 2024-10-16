@@ -14,10 +14,10 @@ variable "vault_prefix" {
     default = "azurevt"
 }
 
-variable "key_prefix" {
-    type = string
+variable "secret_prefix" {
+    type = list(string)
     description = "prefix for Azure vault key name"
-    default = "azurekey"
+    
 }
 
 variable "env" {
