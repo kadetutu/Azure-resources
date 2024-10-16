@@ -11,13 +11,13 @@ variable "resource_group_location" {
 variable "vault_prefix" {
     type = string
     description = "prefix for Azure Key Vault name"
-    default = "azurevt-"
+    default = "azurevt"
 }
 
 variable "key_prefix" {
     type = string
     description = "prefix for Azure vault key name"
-    default = "azurekey-"
+    default = "azurekey"
 }
 
 variable "env" {
